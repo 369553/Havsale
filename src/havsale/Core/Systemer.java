@@ -2,7 +2,6 @@ package havsale.Core;
 
 import ReflectorRuntime.Reflector;
 import java.io.BufferedOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
@@ -25,7 +24,7 @@ import rwservice.RWService;
  * - Dizindeki verilerin taranarak, yüklenmesini tetikler<br>
  * Kullanıcın yaptığı CRUD işlemlerine cevâp verir<br>
  * @author Mehmet Akif SOLAK
- * @version 1.0.0
+ * @version 1.0.1
  */
 public class Systemer implements IDataAccess{
     private DataB dBase;
@@ -133,6 +132,20 @@ public class Systemer implements IDataAccess{
         String log = "HavsaleConfiguration yapılandırma dosyası kayıt işlemi " + (isSuccessful ? "BAŞARILI" : "BAŞARISIZ");
         writeLog(log);
         return isSuccessful;
+    }
+    /**
+     * Nesne sınıflarının alan verilerini almak / veri zerk etmek için
+     * kodlama biçimine ihtiyaç duyulabilir<br>
+     * BU metot, bu kodlama biçimini belirtmeyi sağlamaktadır
+     * @param codingStyle Kodlama biçimi
+     */
+    public void setCodingStyleOfHavsaleConfiguration(CODING_STYLE codingStyle){
+        if(codingStyle == null)
+            return;
+        if(codingStyle.equals(this.getConfs().getCodingStyle()))
+            return;
+        getConfs().setCodingStyle(codingStyle);
+        writeLog("Nesne sınıflarının kodlama biçimini simgeleyen yapılandırma değiştirildi. Yeni yapılandırma : " + codingStyle);
     }
     // KORUNAN İŞLEM METOTLARI:
     /**
@@ -286,7 +299,7 @@ public class Systemer implements IDataAccess{
      * - u : update<br>
      * - a : add<br>
      * - d : delete<br>
-     * @param entityClass İşlem gören nesnenin sınıfı
+     * @param nameOfEntityClass İşlem gören nesnenin sınıfının tam ismi
      * @param entityId İşlem gören nesnenin birincil anahtar değeri
      * @param process İşlem tipini simgeleyen harf
      * @param wasSuccessful İlgili işlem başarılı olduysa {@code true} verilmelidir
